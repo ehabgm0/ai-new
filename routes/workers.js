@@ -1,0 +1,27 @@
+const express = require('express');
+const router = express.Router();
+const Worker = require('../models/Worker');
+
+// Add a new worker
+router.post('/add', async (req, res) => {
+  try {
+    const { name, phone, specialization } = req.body;
+    const worker = new Worker({ name, phone, specialization });
+    await worker.save();
+    res.status(201).json({ message: 'Worker added successfully' });
+  } catch (error) {
+    res.status(400).json({ error: 'Error adding worker' });
+  }
+});
+
+// Get all workers
+router.get('/', async (req, res) => {
+  try {
+    const workers = await Worker.find();
+    res.status(200).json(workers);
+  } catch (error) {
+    res.status(400).json({ error: 'Error fetching workers' });
+  }
+});
+
+module.exports = router;
